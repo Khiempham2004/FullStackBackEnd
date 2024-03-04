@@ -116,6 +116,9 @@ server.post("/Login", async (req, res) => {
         // compare password
 
         const userResult = await bcrypt.compare("password" , )
+        if (!userResult) {
+            throw new Error("username and password  not corrext")
+        }
         // if (hashingPasswordLogin !== currentUser.password) throw new Error("Sai tài khoản hoặc mật khẩu");
 
         return res.status(201).send("Login successfully")
