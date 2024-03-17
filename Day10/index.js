@@ -4,9 +4,10 @@ import morgan from 'morgan';
 import mongoose, { Schema } from 'mongoose';
 import multer, { diskStorage } from 'multer';
 import { v2 as cloudinary } from "cloudinary";
-const app = express()
 
+const app = express();
 dotenv.config();
+const PORT = process.env.PORT || 3000
 
 const diskStorages = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -62,34 +63,34 @@ const postModel = mongoose.model("post", PostModel);
 app.use("/index", (req, res) => res.status(200).send("hello word!"))
 
 
-app.post("/image" , image.array ("files") , async (req, res) => {
+app.post("/image", image.array("files"), async (req, res) => {
     try {
         const files = req.files;
         if (!files) {
             return res.status(400).send("không có tệp nào tải lên")
         }
         res.json({
-            code : 200,
-            message : "đẩy file thành công lên tệp",
-            data : files,
+            code: 200,
+            message: "đẩy file thành công lên tệp",
+            data: files,
         })
     } catch (error) {
         res.json({
-            code : 404,
-            message : "success"
+            code: 404,
+            message: "success"
         })
     }
-} )
+})
 app.post("/upload", upload.single("file"), async (req, res) => {
     try {
         const file = req.file;
 
-        if(!file) {
-            return res.status(200).send({error : "khongo có tệp tải lên"})
+        if (!file) {
+            return res.status(200).send({ error: "khongo có tệp tải lên" })
         }
         res.json({
-            message : "tệp được tải lên thành công",
-            data : file,
+            message: "tệp được tải lên thành công",
+            data: file,
         })
         if (file.length > 2 || file.every((file) => file.size > 5 * 1024)) {
             res.status(400).send("too many people file or too large")
@@ -126,6 +127,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 app.delete("/posts/delete", async (req, res) => {
     try {
         const post = await PostModel.find()
+        res.status(200).send(post)
     } catch (error) {
         res.json({
             code: 500,
@@ -134,7 +136,7 @@ app.delete("/posts/delete", async (req, res) => {
     }
 })
 mongoose
-    .connect('mongodb://localhost:27017/NodeJs')
-    .then((app.listen(process.env.PORT, () => console.log('Server is running!')
+    .connect('mongodb://localhost:27017/fullStack')
+    .then((app.listen(PORT, () => console.log(`Server is running! ${PORT}`)
     ))
     );

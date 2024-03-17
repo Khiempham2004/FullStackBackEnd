@@ -1,10 +1,11 @@
-import userModel from '../model/user.model.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt';
-import _ from 'lodash'
+import _ from 'lodash';
+import userModel from '../model/user.model.js';
 
-const register = async (req, res, next) => {
+export const register = async (req, res, next) => {
     const { username, email, password } = req.body;
+
     const salt = await bcrypt.genSalt(10);
     const handlePassword = await bcrypt.hash(password, salt);
 
@@ -12,46 +13,22 @@ const register = async (req, res, next) => {
         username,
         email,
         password: handlePassword,
-        role: ["user"],
+        roles: ["users"]
     });
-    res.status(200).send(users)
 
+    res.status(200).send(users);
 }
-
-export default register;
 
 export const login = async (req, res, next) => {
     const { username, email, password } = req.body;
+
     const user = await userModel.findOne({
         username: username || { $ne: null }, // $ne = not equals
         email: email || { $ne: null }, // $ne = not equals
     });
 
-    // TH0: body = {}
-    /**
-     * const user = await UserModel.findOne({});
-     */
-    // TH1: body = {username: "aaaa"}
-    /**
-     * const user = await UserModel.findOne({
-        username: 'aaaa', // $ne = not equals
-      });
-    */
-    // TH2: body = {email: "aaaa@gmail.com"}
-    /**
-     * const user = await UserModel.findOne({
-        email: 'aaa@gmail.com', // $ne = not equals
-      });
-    */
-    // TH3: body = {email: "aaaa@gmail.com", username: 'aaa'}
-    /**
-     * const user = await UserModel.findOne({
-     *  username: 'aaa',
-        email: 'aaa@gmail.com', // $ne = not equals
-      });
-    */
-
     const result = bcrypt.compare(password, user.password);
+
     if (!result) {
         throw new Error("username , email or password not correct!");
     }
@@ -59,19 +36,18 @@ export const login = async (req, res, next) => {
     // Encode token (Access token + Refresh token)
     const payroad = {
         id: user._id.toString(),
-        username: user.userName,
+        username: user.username,
         email: user.email,
-        roles: user.role,
+        roles: user.roles,
     }
-    const accessToken = jwt.sign(payroad, process.env.JWT_REFRESH_TOKEN, {
-        expiresIn: "30s",
-    });
+    const token = jwt.sign(payroad, process.env.JWT)
+    console.log("token :>>" , token);
+    
+    // const refreshToken = jwt.sign(payroad, process.env.JWT_REFRESH_TOKEN, {
+    //     expiresIn: "1d",
+    // });
 
-    const refreshToken = jwt.sign(payroad, process.env.JWT_REFRESH_TOKEN, {
-        expiresIn: "1d",
-    });
-
-    res.status(200).send(accessToken, refreshToken)
+    res.status(200).send("mindx")
 };
 
 export const refresh = (req, res, next) => {

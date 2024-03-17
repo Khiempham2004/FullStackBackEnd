@@ -1,0 +1,1 @@
+import db from '../model/auth.model.js'

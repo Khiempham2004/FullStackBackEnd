@@ -22,9 +22,9 @@ app.post("/registers", async (req, res) => {
         const handlePassword = await bcrypt.hash(password, salt)
 
 
-        await userModel({
-            username,
+        await userModel.create({
             email,
+            username,
             password: handlePassword
         })
         // bcrypt.genSalt(saltRounds , function(err , salt) {

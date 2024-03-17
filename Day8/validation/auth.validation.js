@@ -3,7 +3,6 @@ export const validateRegister = (req, res, next) => {
     if (!username) throw new Error("username is required!");
     if (!email) throw new Error("email is required!");
     if (!password) throw new Error("password is required!");
-
     next();
 }
 

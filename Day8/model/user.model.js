@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    userName : String,
+    username : String,
     email : String,
     password : String,
-    role : [String]
+    roles : [String]
 })
 
-const UserModel =  mongoose.model("users" , userSchema);
+const userModel =  mongoose.model("user" , userSchema);
 
-export default UserModel;
+export default userModel;

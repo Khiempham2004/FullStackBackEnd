@@ -62,7 +62,7 @@ server.post("/student", async (req, res) => {
 const saltRounds = 10;
 server.use(express.json())
 
-server.post("/registers/:id", async (req, res) => {
+server.post("/registers", async (req, res) => {
     try {
 
         const { email, username, password } = req.body;
@@ -115,7 +115,7 @@ server.post("/Login", async (req, res) => {
         const hashingPasswordLogin = bcrypt.hashSync(password, currentUser.salt);
         // compare password
 
-        const userResult = await bcrypt.compare("password" , )
+        const userResult = await bcrypt.compare(password, hashingPasswordLogin.password)
         if (!userResult) {
             throw new Error("username and password  not corrext")
         }
